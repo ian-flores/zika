@@ -7,7 +7,7 @@ library(ggplot2)
 library(scales)  
 library(dplyr)
 library(plyr)
-
+library(ggmap)
 ###Guatemala###
 guat <- readShapePoly("GTM_adm/GTM_adm1.shp")
 guat_dist <- fortify(guat, region = "NAME_1")
@@ -36,6 +36,7 @@ centre$id <- guat@data$NAME_1
 
 
 mapa <- function(country="", data, shp){
+  pais <- get_map(location=country, zoom=4)
   plot <- ggplot() + geom_map(data=data, aes(map_id= location, 
                                    fill= casos), 
                     map=shp) + expand_limits(x = shp$long, 
