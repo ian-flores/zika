@@ -34,12 +34,12 @@ distcenters <- ddply(guat_dist, .(id), summarize, clat = mean(lat),
   xolo <- ggplot() + geom_map(data=data, aes(map_id= location, 
                                    fill= value), 
                     map=guat_dist) + expand_limits(x = guat_dist$long, 
-                                                   y = guat_dist$lat) + 
-    geom_path(color="black")+
+                                                   y = guat_dist$lat) +
+    geom_polygon(inherit.aes =T, color="white")+
   scale_fill_gradient2(low = muted("blue"), mid = "white",  midpoint = 
                          (range(data$value)[2]-range(data$value)[1])/2, 
                        high = muted("red"), limits = c(min(data$value), max(data$value))) +  
-    geom_text(data=distcenters, aes(x= clong, y= clat, label=id))+
+    geom_text(data=distcenters, aes(x= clong, y= clat, label=id), size=2.5)+
      theme_bw()+
   theme(axis.line=element_blank(),
         axis.text.x=element_blank(),
@@ -52,8 +52,8 @@ distcenters <- ddply(guat_dist, .(id), summarize, clat = mean(lat),
         panel.border=element_blank(),
         panel.grid.major=element_blank(),
         panel.grid.minor=element_blank()) + 
-  ggtitle("Guatemala ZIKA")
-xolo
+  ggtitle("Guatemala ZIKA") +coord_map()
+  xolo
 
 nameindata <- levels(factor(data$location))
 nameinmap <- levels(factor(guat_dist$id))
