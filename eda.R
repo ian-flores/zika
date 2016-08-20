@@ -29,17 +29,27 @@ library(scales)
 library(dplyr)
 library(plyr)# hsv colorspace manipulations
 
+
 distcenters <- ddply(guat_dist, .(id), summarize, clat = mean(lat), 
                      clong = mean(long))
+)
+centre <- coordinates(guat)
+centre <- data.frame(centre)
+centre$id <- guat@data$NAME_1
+
+
+calc.borders(guat_dist)
   xolo <- ggplot() + geom_map(data=data, aes(map_id= location, 
                                    fill= value), 
                     map=guat_dist) + expand_limits(x = guat_dist$long, 
                                                    y = guat_dist$lat) +
-    geom_polygon(inherit.aes =T, color="white")+
+    geom_polygon(data=guat_dist, aes(x=long, y=lat, group=group), color="white", fill=NA)+
   scale_fill_gradient2(low = muted("blue"), mid = "white",  midpoint = 
                          (range(data$value)[2]-range(data$value)[1])/2, 
-                       high = muted("red"), limits = c(min(data$value), max(data$value))) +  
-    geom_text(data=distcenters, aes(x= clong, y= clat, label=id), size=2.5)+
+                       high = muted("red"), limits = c(min(data$value), max(data$value)), 
+                       name="Zika Cases") +  
+   # geom_text(data=distcenters, aes(x= clong, y= clat, label=id), size=2.5)+
+    geom_label(data=centre, aes(x= X1, y= X2, label=id), size=2.5)+
      theme_bw()+
   theme(axis.line=element_blank(),
         axis.text.x=element_blank(),
